@@ -2,6 +2,188 @@ import React, { useState, useEffect } from "react";
 import CustomSelect from './components/CustomSelect';
 import "./styles.css";
 
+
+
+
+
+
+function CategoriesModal({ onClose }) {
+  return (
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: "rgba(0,0,0,0.4)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1200,
+      }}
+    >
+      <div
+        className="modal"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          backgroundColor: "white",
+          borderRadius: 8,
+          padding: 30,
+          minWidth: 280,
+          maxWidth: "90vw",
+          boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
+          textAlign: "center",
+          fontWeight: "500",
+          userSelect: "none",
+        }}
+      >
+        <h3 style={{ marginBottom: 20 }}>Категории</h3>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 14,
+            fontSize: 16,
+          }}
+        >
+          <div
+            style={{
+              padding: "10px 15px",
+              borderRadius: 6,
+              backgroundColor: "#e6f0ff",
+              color: "#2a5db0",
+              fontWeight: "700",
+              cursor: "default",
+              boxShadow: "0 0 8px #a0b9e8",
+            }}
+          >
+            Участники
+          </div>
+          <div
+            style={{
+              padding: "10px 15px",
+              borderRadius: 6,
+              backgroundColor: "#f5f5f5",
+              color: "#555",
+              cursor: "default",
+            }}
+          >
+            Пароли
+          </div>
+          <div
+            style={{
+              padding: "10px 15px",
+              borderRadius: 6,
+              backgroundColor: "#f5f5f5",
+              color: "#555",
+              cursor: "default",
+            }}
+          >
+            В разработке
+          </div>
+        </div>
+        <button
+          onClick={onClose}
+          style={{
+            marginTop: 24,
+            padding: "6px 14px",
+            borderRadius: 6,
+            border: "none",
+            backgroundColor: "#2a5db0",
+            color: "white",
+            cursor: "pointer",
+            fontWeight: "600",
+            fontSize: 14,
+          }}
+        >
+          Закрыть
+        </button>
+      </div>
+    </div>
+  );
+} 
+
+function SettingsModal({ onClose, volume, setVolume, brightness, setBrightness }) {
+  return (
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        top:0, left:0, right:0, bottom:0,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1100
+      }}
+    >
+      <div
+        className="modal"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          backgroundColor: "white",
+          padding: 20,
+          borderRadius: 8,
+          minWidth: 300,
+          maxWidth: '90vw'
+        }}
+      >
+        <h3>Настройки</h3>
+        
+        <div style={{ marginBottom: 20 }}>
+          <label htmlFor="volume-slider" style={{ display: "block", marginBottom: 6 }}>
+            Громкость: {volume}%
+          </label>
+          <input
+            id="volume-slider"
+            type="range"
+            min="0"
+            max="100"
+            value={volume}
+            onChange={(e) => setVolume(e.target.value)}
+            style={{
+              width: "100%",
+              height: 8,
+              borderRadius: 4,
+              background: `linear-gradient(to right, #6a9ef8 0%, #6a9ef8 ${volume}%, #ccc ${volume}%, #ccc 100%)`,
+              outline: "none",
+              WebkitAppearance: "none",
+            }}
+          />
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <label htmlFor="brightness-slider" style={{ display: "block", marginBottom: 6 }}>
+            Яркость: {brightness}%
+          </label>
+          <input
+            id="brightness-slider"
+            type="range"
+            min="0"
+            max="100"
+            value={brightness}
+            onChange={(e) => setBrightness(e.target.value)}
+            style={{
+              width: "100%",
+              height: 8,
+              borderRadius: 4,
+              background: `linear-gradient(to right, #f8b36a 0%, #f8b36a ${brightness}%, #ccc ${brightness}%, #ccc 100%)`,
+              outline: "none",
+              WebkitAppearance: "none",
+            }}
+          />
+        </div>
+
+        <button onClick={onClose} style={{ marginTop: 10 }}>
+          Закрыть
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
 function LoginForm({ onLogin }) {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
@@ -9,9 +191,12 @@ function LoginForm({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (login === "Admin" && password === "O140emYS8*Pf3~Y~*(c2RLrww837LNXR0yA4zOt:H/`Y5?tkH," || login === "Manager" && password === "I0+T|Qo8'c{&3g172)NPZc(3jXEe9XGAdk{,fHJ8>,%4)M.N3r") {
+    if (
+      (login === "Admin" && password === "O140emYS8*Pf3~Y~*(c2RLrww837LNXR0yA4zOt:H/`Y5?tkH,") ||
+      (login === "Manager" && password === "I0+T|Qo8'c{&3g172)NPZc(3jXEe9XGAdk{,fHJ8>,%4)M.N3r")
+    ) {
       onLogin();
-    }else {
+    } else {
       setError("Неверный логин или пароль");
     }
   };
@@ -43,6 +228,8 @@ function LoginForm({ onLogin }) {
 }
 
 function MainApp() {
+  const [showSettings, setShowSettings] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
   const [users, setUsers] = useState(() => {
     const saved = localStorage.getItem("users");
     if (saved) {
@@ -54,8 +241,14 @@ function MainApp() {
         return [];
       }
     }
+
+
+
+    
     return [];
   });
+
+  
 
   const [formData, setFormData] = useState({
     email: "",
@@ -85,6 +278,10 @@ function MainApp() {
     const saved = localStorage.getItem("darkTheme");
     return saved === "true";
   });
+
+
+  const [volume, setVolume] = useState(50);
+  const [brightness, setBrightness] = useState(50);
 
   useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
@@ -214,6 +411,25 @@ function MainApp() {
 
   return (
     <div className={`app-container ${darkTheme ? "dark-theme" : ""}`}>
+      {/* Кнопка с тремя точками для открытия настроек */}
+      <div
+        style={{
+          position: "fixed",
+          top: 10,
+          left: 10,
+          cursor: "pointer",
+          fontSize: "24px",
+          zIndex: 1000,
+          userSelect: "none",
+        }}
+        onClick={() => setShowSettings(true)}
+        title="Открыть настройки"
+      >
+        ⋮
+      </div>
+
+      {}
+
       <h2>Список участников</h2>
 
       <div className="theme-toggle">
@@ -270,27 +486,26 @@ function MainApp() {
             className="filter-input"
           />
 
-<CustomSelect
-  value={sortField}
-  onChange={(val) => setSortField(val)}
-  options={[
-    { value: "first_name", label: "Имя" },
-    { value: "last_name", label: "Фамилия" },
-    { value: "position", label: "Должность" },
-    { value: "gender", label: "Пол" },
-    { value: "age", label: "Возраст" },
-  ]}
-/>
+          <CustomSelect
+            value={sortField}
+            onChange={(val) => setSortField(val)}
+            options={[
+              { value: "first_name", label: "Имя" },
+              { value: "last_name", label: "Фамилия" },
+              { value: "position", label: "Должность" },
+              { value: "gender", label: "Пол" },
+              { value: "age", label: "Возраст" },
+            ]}
+          />
 
-<CustomSelect
-  value={sortDirection}
-  onChange={(val) => setSortDirection(val)}
-  options={[
-    { value: "asc", label: "По возрастанию" },
-    { value: "desc", label: "По убыванию" },
-  ]}
-/>
-
+          <CustomSelect
+            value={sortDirection}
+            onChange={(val) => setSortDirection(val)}
+            options={[
+              { value: "asc", label: "По возрастанию" },
+              { value: "desc", label: "По убыванию" },
+            ]}
+          />
 
           <button onClick={openAddForm} className="add-btn" style={{ marginTop: 20 }}>
             Добавить участника
@@ -424,6 +639,17 @@ function MainApp() {
           )}
         </main>
       </div>
+
+      {showSettings && (
+  <SettingsModal
+    onClose={() => setShowSettings(false)}
+    volume={volume}
+    setVolume={setVolume}
+    brightness={brightness}
+    setBrightness={setBrightness}
+  />
+)}
+
     </div>
   );
 }
